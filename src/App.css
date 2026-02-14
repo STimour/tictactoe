@@ -5,6 +5,8 @@
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .hero {
@@ -38,13 +40,14 @@
 }
 
 .game-panel {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: 28px;
   padding: 2rem;
   position: relative;
-  box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .board {
@@ -58,13 +61,16 @@
 .cell {
   aspect-ratio: 1 / 1;
   border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.45);
   display: grid;
   place-items: center;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
   position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .cell:hover {
@@ -108,10 +114,13 @@
   display: inline-flex;
   padding: 0.6rem 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.45);
   font-size: 0.95rem;
   color: var(--text-muted);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .control-panel {
@@ -121,13 +130,15 @@
 }
 
 .mode-bar {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: 22px;
   padding: 1.25rem;
   display: grid;
   gap: 1rem;
-  box-shadow: var(--panel-shadow);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .mode-group,
@@ -141,11 +152,13 @@
 .difficulty-button {
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.3);
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(15, 23, 42, 0.45);
   color: var(--text-muted);
   padding: 0.55rem 0.9rem;
   font-size: 0.85rem;
   transition: all 0.2s ease;
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .mode-button.active,
@@ -162,13 +175,16 @@
 }
 
 .score-card {
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 23, 42, 0.45);
   border-radius: 18px;
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  border: 1px solid rgba(148, 163, 184, 0.35);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .score-label {
@@ -204,12 +220,17 @@
   background: linear-gradient(120deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15));
   color: var(--text-strong);
   font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .control-button.ghost {
   border-color: rgba(148, 163, 184, 0.3);
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 23, 42, 0.45);
   color: var(--text-muted);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 .offline-chip {
@@ -219,6 +240,10 @@
   padding: 0.6rem 1rem;
   border-radius: 999px;
   border: 1px dashed rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.45);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
 
 @keyframes pop-in {
