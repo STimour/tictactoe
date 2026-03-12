@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
-export type Theme = 'light' | 'dark'
+export type Theme = 'light' | 'dark' | 'contrast'
 
 type ThemeContextType = {
   theme: Theme
@@ -16,24 +16,26 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useTheme = () => useContext(ThemeContext)
 
+const order: Theme[] = ['light', 'dark', 'contrast']
+
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     try {
       const stored = localStorage.getItem('game-theme')
-      return stored === 'dark' ? 'dark' : 'light'
-    } catch {
-      return 'light'
-    }
+      if (stored === 'light' || stored === 'dark' || stored === 'contrast') return stored
+    } catch { /* empty */ }
+    return 'light'
   })
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme)
-    try {
-      localStorage.setItem('game-theme', newTheme)
-    } catch {}
+    try { localStorage.setItem('game-theme', newTheme) } catch { /* empty */ }
   }
 
-  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
+  const toggleTheme = () => {
+    const idx = order.indexOf(theme)
+    setTheme(order[(idx + 1) % order.length])
+  }
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)

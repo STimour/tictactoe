@@ -9,11 +9,10 @@ const RulesScreen = ({ onBack }: Props) => {
 
   return (
     <div className="screen rules-screen">
-      <button className="back-btn" onClick={onBack}>
-        ← {t.back}
-      </button>
-
-      <h2 className="screen-title">{t.rulesTitle}</h2>
+      <header className="screen-header">
+        <button className="btn-icon" onClick={onBack}>←</button>
+        <h1>{t.rulesTitle}</h1>
+      </header>
 
       <div className="rules-list">
         {t.rulesText.map((rule, i) => (

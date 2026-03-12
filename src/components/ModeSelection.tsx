@@ -10,20 +10,21 @@ const ModeSelection = ({ onSelect, onBack }: Props) => {
 
   return (
     <div className="screen mode-screen">
-      <button className="back-btn" onClick={onBack}>
-        ← {t.back}
-      </button>
-
-      <h2 className="screen-title">{t.chooseMode}</h2>
+      <header className="screen-header">
+        <button className="btn-icon" onClick={onBack}>←</button>
+        <h1>{t.chooseMode}</h1>
+      </header>
 
       <div className="mode-cards">
         <button className="mode-card" onClick={() => onSelect('pvp')}>
-          <span className="mode-card-icon">👥</span>
-          <span className="mode-card-label">{t.vsPlayer}</span>
+          <div className="mode-card-icon">👥</div>
+          <span className="mode-card-title">{t.vsPlayer}</span>
+          <span className="mode-card-desc">{t.vsPlayerDesc}</span>
         </button>
         <button className="mode-card" onClick={() => onSelect('ai')}>
-          <span className="mode-card-icon">🤖</span>
-          <span className="mode-card-label">{t.vsAI}</span>
+          <div className="mode-card-icon">🤖</div>
+          <span className="mode-card-title">{t.vsAI}</span>
+          <span className="mode-card-desc">{t.vsAIDesc}</span>
         </button>
       </div>
     </div>

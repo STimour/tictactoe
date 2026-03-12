@@ -2,81 +2,78 @@ import { useState } from 'react'
 import './App.css'
 import { LanguageProvider } from './i18n/LanguageContext'
 import { ThemeProvider } from './theme/ThemeContext'
+import { SettingsProvider } from './contexts/SettingsContext'
+import { useTutorial } from './hooks/useTutorial'
+import type { GameConfig } from './hooks/useGameLogic'
+import { defaultConfig } from './hooks/useGameLogic'
 import LandingPage from './components/LandingPage'
 import ModeSelection from './components/ModeSelection'
 import GameSetup from './components/GameSetup'
 import GameScreen from './components/GameScreen'
 import RulesScreen from './components/RulesScreen'
 import SettingsScreen from './components/SettingsScreen'
-import type { Difficulty, GameConfig } from './hooks/useGame'
-import type { GridSize } from './utils/gameLogic'
+import StatsScreen from './components/StatsScreen'
+import Tutorial from './components/Tutorial'
 
-type Screen = 'landing' | 'modeSelect' | 'gameSetup' | 'game' | 'rules' | 'settings'
+type Screen = 'landing' | 'modeSelect' | 'gameSetup' | 'game' | 'rules' | 'settings' | 'stats'
 
-function App() {
+function AppInner() {
   const [screen, setScreen] = useState<Screen>('landing')
-  const [gameConfig, setGameConfig] = useState<GameConfig>({
-    mode: 'pvp',
-    difficulty: 'easy',
-    gridSize: 3,
-  })
+  const [gameMode, setGameMode] = useState<'pvp' | 'ai'>('ai')
+  const [gameConfig, setGameConfig] = useState<GameConfig>(defaultConfig)
   const [gameKey, setGameKey] = useState(0)
+  const tutorial = useTutorial()
 
   const handleModeSelect = (mode: 'pvp' | 'ai') => {
-    if (mode === 'pvp') {
-      setGameConfig({ mode: 'pvp', difficulty: 'easy', gridSize: 3 })
-      setGameKey((k) => k + 1)
-      setScreen('game')
-    } else {
-      setGameConfig((prev) => ({ ...prev, mode: 'ai' }))
-      setScreen('gameSetup')
-    }
+    setGameMode(mode)
+    setScreen('gameSetup')
   }
 
-  const handleGameSetup = (difficulty: Difficulty, gridSize: GridSize) => {
-    setGameConfig({ mode: 'ai', difficulty, gridSize })
+  const handleStartGame = (config: GameConfig) => {
+    setGameConfig(config)
     setGameKey((k) => k + 1)
     setScreen('game')
   }
 
   return (
-    <ThemeProvider>
-    <LanguageProvider>
-      <div className="app-shell">
+    <div className="app">
+      {tutorial.show && (
+        <Tutorial step={tutorial.step} totalSteps={tutorial.totalSteps} onNext={tutorial.next} onSkip={tutorial.finish} />
+      )}
+      <div className="screen-container">
         {screen === 'landing' && (
           <LandingPage
             onPlay={() => setScreen('modeSelect')}
             onRules={() => setScreen('rules')}
             onSettings={() => setScreen('settings')}
+            onStats={() => setScreen('stats')}
           />
         )}
         {screen === 'modeSelect' && (
-          <ModeSelection
-            onSelect={handleModeSelect}
-            onBack={() => setScreen('landing')}
-          />
+          <ModeSelection onSelect={handleModeSelect} onBack={() => setScreen('landing')} />
         )}
         {screen === 'gameSetup' && (
-          <GameSetup
-            onStart={handleGameSetup}
-            onBack={() => setScreen('modeSelect')}
-          />
+          <GameSetup mode={gameMode} onStart={handleStartGame} onBack={() => setScreen('modeSelect')} />
         )}
         {screen === 'game' && (
-          <GameScreen
-            key={gameKey}
-            config={gameConfig}
-            onQuit={() => setScreen('landing')}
-          />
+          <GameScreen key={gameKey} config={gameConfig} onQuit={() => setScreen('landing')} />
         )}
-        {screen === 'rules' && (
-          <RulesScreen onBack={() => setScreen('landing')} />
-        )}
-        {screen === 'settings' && (
-          <SettingsScreen onBack={() => setScreen('landing')} />
-        )}
+        {screen === 'rules' && <RulesScreen onBack={() => setScreen('landing')} />}
+        {screen === 'settings' && <SettingsScreen onBack={() => setScreen('landing')} />}
+        {screen === 'stats' && <StatsScreen onBack={() => setScreen('landing')} />}
       </div>
-    </LanguageProvider>
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <SettingsProvider>
+          <AppInner />
+        </SettingsProvider>
+      </LanguageProvider>
     </ThemeProvider>
   )
 }

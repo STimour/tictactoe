@@ -68,6 +68,38 @@
   background-color: var(--bg-body);
 }
 
+/* ═══════════════════════════════════════════
+   CONTRAST THEME (High Accessibility)
+   ═══════════════════════════════════════════ */
+[data-theme='contrast'] {
+  --color-primary: #ffffff;
+  --color-accent: #FFD700;
+  --color-light: #FFD700;
+  --color-gold: #FFD700;
+  --color-gold-dark: #FFA500;
+
+  --bg-body: #000000;
+  --bg-card: #1a1a1a;
+  --bg-card-alt: #262626;
+  --bg-overlay: rgba(0, 0, 0, 0.92);
+  --border-color: rgba(255, 255, 255, 0.25);
+  --border-active: #FFD700;
+
+  --text-strong: #ffffff;
+  --text-muted: #cccccc;
+  --text-on-primary: #000000;
+
+  --mark-x: #00FF88;
+  --mark-o: #FFD700;
+
+  --shadow-sm: none;
+  --shadow-md: 0 0 0 1px rgba(255, 255, 255, 0.15);
+  --shadow-active: 0 0 0 2px #FFD700;
+
+  color: var(--text-strong);
+  background-color: var(--bg-body);
+}
+
 * {
   box-sizing: border-box;
 }

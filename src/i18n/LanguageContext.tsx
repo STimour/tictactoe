@@ -1,10 +1,18 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { translations, type Language, type TranslationKeys } from './translations'
 
 type LanguageContextType = {
   lang: Language
   setLang: (lang: Language) => void
   t: TranslationKeys
+}
+
+function detectLanguage(): Language {
+  try {
+    const stored = localStorage.getItem('game-lang')
+    if (stored === 'fr' || stored === 'ru') return stored
+  } catch { /* empty */ }
+  return 'ru'
 }
 
 const LanguageContext = createContext<LanguageContextType>({
@@ -16,21 +24,16 @@ const LanguageContext = createContext<LanguageContextType>({
 export const useLanguage = () => useContext(LanguageContext)
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [lang, setLangState] = useState<Language>(() => {
-    try {
-      const stored = localStorage.getItem('game-lang')
-      return stored === 'fr' || stored === 'ru' ? stored : 'ru'
-    } catch {
-      return 'ru'
-    }
-  })
+  const [lang, setLangState] = useState<Language>(detectLanguage)
 
   const setLang = (newLang: Language) => {
     setLangState(newLang)
-    try {
-      localStorage.setItem('game-lang', newLang)
-    } catch {}
+    try { localStorage.setItem('game-lang', newLang) } catch { /* empty */ }
   }
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t: translations[lang] }}>
