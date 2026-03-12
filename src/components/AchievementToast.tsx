@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
 import { allAchievements } from '../utils/stats'
-import type { TranslationKeys } from '../i18n/translations'
 
 type Props = {
   ids: string[]

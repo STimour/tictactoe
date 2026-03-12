@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { checkWinner, getWinningLine, isDraw, createEmptyBoard, getAvailableMoves } from '../utils/gameLogic'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { checkWinner, getWinningLine, isDraw, createEmptyBoard } from '../utils/gameLogic'
 import type { BoardState, PlayerMark, GridSize } from '../utils/gameLogic'
 import { getBestMove } from '../utils/ai'
 import { useSettings } from '../contexts/SettingsContext'
@@ -43,9 +43,8 @@ function resolveFirst(cfg: GameConfig): PlayerMark {
 
 export function useGameLogic(config: GameConfig) {
   const { sounds, vibrations } = useSettings()
-  const total = config.gridSize * config.gridSize
   const aiSymbol: PlayerMark = config.playerSymbol === 'X' ? 'O' : 'X'
-  const aiTimer = useRef<ReturnType<typeof setTimeout>>()
+  const aiTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   // --- state ---
   const [board, setBoard] = useState<BoardState>(() => {

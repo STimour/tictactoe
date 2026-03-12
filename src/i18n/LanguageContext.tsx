@@ -1,10 +1,10 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
-import { translations, type Language, type TranslationKeys } from './translations'
+import { translations, type Language } from './translations'
 
 type LanguageContextType = {
   lang: Language
   setLang: (lang: Language) => void
-  t: TranslationKeys
+  t: (typeof translations)['ru' | 'fr']
 }
 
 function detectLanguage(): Language {
