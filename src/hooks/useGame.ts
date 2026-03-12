@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { checkWinner, getWinningLine, isDraw } from '../utils/gameLogic'
-import type { BoardState, PlayerMark } from '../utils/gameLogic'
+import { checkWinner, getWinningLine, isDraw, createEmptyBoard } from '../utils/gameLogic'
+import type { BoardState, PlayerMark, GridSize } from '../utils/gameLogic'
 import { getBestMove } from '../utils/ai'
 
-type GameMode = 'pvp' | 'ai'
+export type GameMode = 'pvp' | 'ai'
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
 export type ScoreState = {
@@ -12,18 +12,19 @@ export type ScoreState = {
   draws: number
 }
 
-const emptyBoard: BoardState = Array(9).fill('')
+export type GameConfig = {
+  mode: GameMode
+  difficulty: Difficulty
+  gridSize: GridSize
+}
+
 const scoreKey = 'neo-tic-score'
 
 const getStoredScore = (): ScoreState => {
-  if (typeof window === 'undefined') {
-    return { X: 0, O: 0, draws: 0 }
-  }
-  const stored = window.localStorage.getItem(scoreKey)
-  if (!stored) {
-    return { X: 0, O: 0, draws: 0 }
-  }
+  if (typeof window === 'undefined') return { X: 0, O: 0, draws: 0 }
   try {
+    const stored = window.localStorage.getItem(scoreKey)
+    if (!stored) return { X: 0, O: 0, draws: 0 }
     const parsed = JSON.parse(stored) as ScoreState
     return {
       X: Number(parsed.X) || 0,
@@ -35,14 +36,13 @@ const getStoredScore = (): ScoreState => {
   }
 }
 
-export const useGame = () => {
-  const [board, setBoard] = useState<BoardState>(emptyBoard)
+export const useGame = (config: GameConfig) => {
+  const { mode, difficulty, gridSize } = config
+  const [board, setBoard] = useState<BoardState>(() => createEmptyBoard(gridSize))
   const [currentPlayer, setCurrentPlayer] = useState<PlayerMark>('X')
   const [winner, setWinner] = useState<PlayerMark | null>(null)
   const [winningLine, setWinningLine] = useState<number[] | null>(null)
   const [draw, setDraw] = useState(false)
-  const [mode, setModeState] = useState<GameMode>('pvp')
-  const [difficulty, setDifficultyState] = useState<Difficulty>('easy')
   const [score, setScore] = useState<ScoreState>(() => getStoredScore())
 
   const isAiTurn = useMemo(
@@ -56,94 +56,59 @@ export const useGame = () => {
 
   const handleMove = useCallback(
     (index: number, source: 'human' | 'ai' = 'human') => {
-    if (board[index] !== '' || winner || draw) {
-      return
-    }
-    if (mode === 'ai' && currentPlayer === 'O' && source !== 'ai') {
-      return
-    }
+      if (board[index] !== '' || winner || draw) return
+      if (mode === 'ai' && currentPlayer === 'O' && source !== 'ai') return
 
-    const nextBoard = [...board]
-    nextBoard[index] = currentPlayer
+      const nextBoard = [...board]
+      nextBoard[index] = currentPlayer
+      const nextWinner = checkWinner(nextBoard, gridSize)
+      const nextDraw = isDraw(nextBoard, gridSize)
+      const line = getWinningLine(nextBoard, gridSize)
 
-    const nextWinner = checkWinner(nextBoard)
-    const nextDraw = isDraw(nextBoard)
-    const line = getWinningLine(nextBoard)
+      setBoard(nextBoard)
+      setWinner(nextWinner)
+      setWinningLine(line)
+      setDraw(nextDraw)
 
-    setBoard(nextBoard)
-    setWinner(nextWinner)
-    setWinningLine(line)
-    setDraw(nextDraw)
-
-    if (nextWinner) {
-      setScore((prev) => ({
-        ...prev,
-        [nextWinner]: prev[nextWinner] + 1,
-      }))
-      return
-    }
-
-    if (nextDraw) {
-      setScore((prev) => ({
-        ...prev,
-        draws: prev.draws + 1,
-      }))
-      return
-    }
-
-    setCurrentPlayer((prev) => (prev === 'X' ? 'O' : 'X'))
-  },
-    [board, currentPlayer, draw, mode, winner],
+      if (nextWinner) {
+        setScore((prev) => ({ ...prev, [nextWinner]: prev[nextWinner] + 1 }))
+        return
+      }
+      if (nextDraw) {
+        setScore((prev) => ({ ...prev, draws: prev.draws + 1 }))
+        return
+      }
+      setCurrentPlayer((prev) => (prev === 'X' ? 'O' : 'X'))
+    },
+    [board, currentPlayer, draw, mode, winner, gridSize],
   )
 
   useEffect(() => {
-    if (!isAiTurn || winner || draw) {
-      return
-    }
-
+    if (!isAiTurn || winner || draw) return
     const timer = window.setTimeout(() => {
-      const move = getBestMove(board, difficulty)
-      if (move >= 0) {
-        handleMove(move, 'ai')
-      }
+      const move = getBestMove(board, difficulty, gridSize)
+      if (move >= 0) handleMove(move, 'ai')
     }, 320)
-
     return () => window.clearTimeout(timer)
-  }, [board, difficulty, draw, handleMove, isAiTurn, winner])
+  }, [board, difficulty, draw, handleMove, isAiTurn, winner, gridSize])
 
   useEffect(() => {
-    if (!winner && !draw) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      resetGame()
-    }, 2000)
-
+    if (!winner && !draw) return
+    const timer = window.setTimeout(() => resetGame(), 2200)
     return () => window.clearTimeout(timer)
   }, [winner, draw])
 
   const resetGame = useCallback(() => {
-    setBoard(emptyBoard)
+    setBoard(createEmptyBoard(gridSize))
     setCurrentPlayer('X')
     setWinner(null)
     setWinningLine(null)
     setDraw(false)
-  }, [])
+  }, [gridSize])
 
   const resetScore = useCallback(() => {
     setScore({ X: 0, O: 0, draws: 0 })
   }, [])
-
-  const setMode = (nextMode: GameMode) => {
-    setModeState(nextMode)
-    resetGame()
-  }
-
-  const setDifficulty = (nextDifficulty: Difficulty) => {
-    setDifficultyState(nextDifficulty)
-    resetGame()
-  }
 
   return {
     board,
@@ -152,12 +117,10 @@ export const useGame = () => {
     winner,
     winningLine,
     mode,
-    difficulty,
+    gridSize,
     score,
     handleMove,
     resetGame,
     resetScore,
-    setMode,
-    setDifficulty,
   }
 }

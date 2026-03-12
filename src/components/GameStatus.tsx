@@ -1,4 +1,5 @@
 import type { PlayerMark } from '../utils/gameLogic'
+import { useLanguage } from '../i18n/LanguageContext'
 
 type GameStatusProps = {
   currentPlayer: PlayerMark
@@ -8,13 +9,15 @@ type GameStatusProps = {
 }
 
 const GameStatus = ({ currentPlayer, winner, draw, mode }: GameStatusProps) => {
-  let message = `Turn: ${currentPlayer}`
+  const { t } = useLanguage()
+
+  let message = `${t.turnOf} ${currentPlayer}`
   if (winner) {
-    message = `${winner} wins the round!`
+    message = `${winner === 'X' ? t.playerX : t.playerO} ${t.wins}`
   } else if (draw) {
-    message = 'Draw. No more moves.'
+    message = t.draw
   } else if (mode === 'ai' && currentPlayer === 'O') {
-    message = 'AI is thinking...'
+    message = t.aiThinking
   }
 
   return (

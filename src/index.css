@@ -1,22 +1,71 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Space+Grotesk:wght@400;600&display=swap');
 
-:root {
+/* ═══════════════════════════════════════════
+   LIGHT THEME (default)
+   Colors: #1A5276  #2980B9  #85C1E9  #F7DC6F  #D4AC0D
+   ═══════════════════════════════════════════ */
+:root,
+[data-theme='light'] {
   font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
   line-height: 1.6;
   font-weight: 400;
-  color: #e2e8f0;
-  background-color: #0f172a;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --neon-cyan: #22d3ee;
-  --neon-violet: #a855f7;
-  --text-muted: rgba(226, 232, 240, 0.7);
-  --text-strong: #f8fafc;
-  --panel-bg: rgba(15, 23, 42, 0.72);
-  --panel-border: rgba(148, 163, 184, 0.25);
-  --panel-shadow: 0 25px 60px rgba(15, 23, 42, 0.55);
+
+  --color-primary: #1A5276;
+  --color-accent: #2980B9;
+  --color-light: #85C1E9;
+  --color-gold: #F7DC6F;
+  --color-gold-dark: #D4AC0D;
+
+  --bg-body: #EBF5FB;
+  --bg-card: #ffffff;
+  --bg-card-alt: #F4F9FD;
+  --bg-overlay: rgba(235, 245, 251, 0.85);
+  --border-color: rgba(26, 82, 118, 0.15);
+  --border-active: #2980B9;
+
+  --text-strong: #1A5276;
+  --text-muted: #5A7D95;
+  --text-on-primary: #ffffff;
+
+  --mark-x: #1A5276;
+  --mark-o: #D4AC0D;
+
+  --shadow-sm: 0 1px 4px rgba(26, 82, 118, 0.08);
+  --shadow-md: 0 4px 12px rgba(26, 82, 118, 0.1);
+  --shadow-active: 0 2px 8px rgba(41, 128, 185, 0.18);
+
+  color: var(--text-strong);
+  background-color: var(--bg-body);
+}
+
+/* ═══════════════════════════════════════════
+   DARK THEME
+   ═══════════════════════════════════════════ */
+[data-theme='dark'] {
+  --bg-body: #0E1A26;
+  --bg-card: #15283A;
+  --bg-card-alt: #1A3148;
+  --bg-overlay: rgba(14, 26, 38, 0.88);
+  --border-color: rgba(133, 193, 233, 0.12);
+  --border-active: #85C1E9;
+
+  --text-strong: #E8F1F8;
+  --text-muted: #8BAFC4;
+  --text-on-primary: #ffffff;
+
+  --mark-x: #85C1E9;
+  --mark-o: #F7DC6F;
+
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-active: 0 2px 8px rgba(133, 193, 233, 0.15);
+
+  color: var(--text-strong);
+  background-color: var(--bg-body);
 }
 
 * {
@@ -26,12 +75,9 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-image: url('/background.jpg');
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-color: var(--bg-body);
   color: var(--text-strong);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body::before {
@@ -41,9 +87,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 55%),
-    radial-gradient(circle at 20% 40%, rgba(168, 85, 247, 0.15), transparent 45%),
-    rgba(15, 23, 42, 0.7);
+  background: var(--bg-overlay);
   pointer-events: none;
   z-index: 0;
 }

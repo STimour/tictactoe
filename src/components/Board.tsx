@@ -1,81 +1,34 @@
-import type { BoardState, PlayerMark } from '../utils/gameLogic'
+import type { BoardState, PlayerMark, GridSize } from '../utils/gameLogic'
 
 export type BoardProps = {
   board: BoardState
+  gridSize: GridSize
   onCellClick: (index: number) => void
   winningLine: number[] | null
   isLocked: boolean
 }
 
-type LineStyle = {
-  width?: string
-  height?: string
-  top?: string
-  left?: string
-  transform?: string
-}
-
-const getLineStyle = (line: number[]): LineStyle => {
-  const [a, b, c] = line
-  const isRow = Math.floor(a / 3) === Math.floor(b / 3)
-  const isCol = a % 3 === b % 3
-
-  if (isRow) {
-    const row = Math.floor(a / 3)
-    return {
-      width: '92%',
-      height: '4px',
-      top: `${16.5 + row * 33.5}%`,
-      left: '4%',
-    }
-  }
-
-  if (isCol) {
-    const col = a % 3
-    return {
-      width: '4px',
-      height: '92%',
-      top: '4%',
-      left: `${16.5 + col * 33.5}%`,
-    }
-  }
-
-  if (a === 0 && c === 8) {
-    return {
-      width: '120%',
-      height: '4px',
-      top: '50%',
-      left: '-10%',
-      transform: 'rotate(45deg)',
-    }
-  }
-
-  return {
-    width: '120%',
-    height: '4px',
-    top: '50%',
-    left: '-10%',
-    transform: 'rotate(-45deg)',
-  }
-}
-
 const renderMark = (mark: PlayerMark | '') => {
-  if (!mark) {
-    return null
-  }
+  if (!mark) return null
   return <span className={`mark mark-${mark}`}>{mark}</span>
 }
 
-const Board = ({ board, onCellClick, winningLine, isLocked }: BoardProps) => {
+const Board = ({ board, gridSize, onCellClick, winningLine, isLocked }: BoardProps) => {
+  const gap = gridSize === 3 ? '0.6rem' : gridSize === 4 ? '0.45rem' : '0.35rem'
+
   return (
-    <div className="board">
-      {winningLine && (
-        <div className="winning-line" style={getLineStyle(winningLine)} />
-      )}
+    <div
+      className="board"
+      data-size={gridSize}
+      style={{
+        gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
+        gap,
+      }}
+    >
       {board.map((cell, index) => (
         <button
           key={index}
-          className={`cell ${cell ? 'cell-filled' : ''}`}
+          className={`cell ${cell ? 'cell-filled' : ''} ${winningLine?.includes(index) ? 'cell-win' : ''}`}
           onClick={() => onCellClick(index)}
           disabled={isLocked || cell !== ''}
           aria-label={`Cell ${index + 1}`}
