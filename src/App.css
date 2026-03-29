@@ -130,6 +130,12 @@
 }
 
 .btn-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  line-height: 1;
+  flex-shrink: 0;
   font-size: 1.1rem;
 }
 

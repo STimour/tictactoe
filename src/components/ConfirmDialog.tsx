@@ -13,8 +13,8 @@ const ConfirmDialog = ({ message, onConfirm, onCancel }: Props) => {
       <div className="dialog confirm-card" onClick={(e) => e.stopPropagation()}>
         <p className="confirm-message">{message}</p>
         <div className="dialog-actions">
-          <button className="btn btn-ghost" onClick={onCancel}>{t.cancel}</button>
-          <button className="btn btn-primary" onClick={onConfirm}>{t.confirm}</button>
+          <button className="btn btn-ghost" onClick={onCancel}><span className="btn-ico">✖️</span>{t.cancel}</button>
+          <button className="btn btn-primary" onClick={onConfirm}><span className="btn-ico">✅</span>{t.confirm}</button>
         </div>
       </div>
     </div>

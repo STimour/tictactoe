@@ -42,9 +42,12 @@ const GameEndScreen = ({ winner, mode, playerSymbol, seriesWinner, onPlayAgain, 
         {subtitle && <p className="end-subtitle">{subtitle}</p>}
         <div className="dialog-actions end-actions">
           <button className="btn btn-primary btn-lg" onClick={onPlayAgain}>
-            {seriesWinner ? t.resetScore : t.playAgain}
+            {seriesWinner
+              ? <><span className="btn-ico">🔄</span>{t.resetScore}</>
+              : <><span className="btn-ico">▶️</span>{t.playAgain}</>
+            }
           </button>
-          <button className="btn btn-ghost" onClick={onMenu}>{t.backToMenu}</button>
+          <button className="btn btn-ghost" onClick={onMenu}><span className="btn-ico">🏠</span>{t.backToMenu}</button>
         </div>
       </div>
     </div>

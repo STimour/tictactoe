@@ -68,7 +68,7 @@ const StatsScreen = ({ onBack }: Props) => {
             })}
           </div>
 
-          <button className="btn btn-danger" onClick={() => setShowConfirm(true)}>{t.resetStats}</button>
+          <button className="btn btn-danger" onClick={() => setShowConfirm(true)}><span className="btn-ico">🗑️</span>{t.resetStats}</button>
         </div>
       )}
 

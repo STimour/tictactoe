@@ -85,7 +85,7 @@ const GameScreen = ({ config, onQuit }: Props) => {
       {/* Bottom */}
       <div className="game-bottom">
         <button className="btn btn-ghost btn-sm" onClick={() => game.resetRound()}>
-          {t.resetRound}
+          <span className="btn-ico">🔄</span>{t.resetRound}
         </button>
       </div>
 

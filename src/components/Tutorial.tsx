@@ -25,9 +25,9 @@ const Tutorial = ({ step, totalSteps, onNext, onSkip }: Props) => {
           ))}
         </div>
         <div className="dialog-actions">
-          <button className="btn btn-ghost" onClick={onSkip}>{t.tutorialSkip}</button>
+          <button className="btn btn-ghost" onClick={onSkip}><span className="btn-ico">❌</span>{t.tutorialSkip}</button>
           <button className="btn btn-primary" onClick={onNext}>
-            {step < totalSteps - 1 ? t.tutorialNext : t.tutorialDone}
+            {step < totalSteps - 1 ? <><span className="btn-ico">➡️</span>{t.tutorialNext}</> : <><span className="btn-ico">✅</span>{t.tutorialDone}</>}
           </button>
         </div>
       </div>
